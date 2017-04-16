@@ -22,7 +22,7 @@
 								{% endif %}
 							{% endfor %}
 						</ul>
-						<form method="post" action="{{ h.url_for('oauth2provider_authorize_confirm') }}">
+						<form method="get" action="{{ h.url_for('oauth2provider_authorize_confirm') }}">
 							<div style="display: none;">
 								<select type="select" name="scope" multiple="multiple">
 								{% for scope in data.scopes %}

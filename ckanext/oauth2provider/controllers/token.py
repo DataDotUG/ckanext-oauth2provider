@@ -69,6 +69,20 @@ class OAuth2ProviderTokenController(tk.BaseController):
 		redirect_uri = tk.request.params.get('redirect_uri', '')
 		state = tk.request.params.get('state', '')
 
+		convert_user_name_or_id_to_id = tk.get_converter(
+			'convert_user_name_or_id_to_id')
+		user_id = convert_user_name_or_id_to_id(context['user'], context)
+
+		# If the grant already exists.
+		grant = Grant.get(user_id=user_id, client_id=client_id)
+		if grant:
+			if state:
+				redirect_uri = set_query_parameter(redirect_uri, 'state', state)
+			# Send the grant code to client via GET as defined by OAuth spec
+			redirect_uri = set_query_parameter(redirect_uri, 'code', grant.code)
+
+			return tk.redirect_to(str(redirect_uri))
+
 		if state:
 			session['oauth2provider_state'] = state
 			session.save()
@@ -107,6 +121,7 @@ class OAuth2ProviderTokenController(tk.BaseController):
 
 		# Check if the client exists
 		client = Client.get(client_id=client_id)
+
 		grant = tk.get_action('oauth2provider_grant_create')(context, {
 			'client_id': client.client_id,
 			'user_id': user.id,
@@ -168,6 +183,9 @@ class OAuth2ProviderTokenController(tk.BaseController):
 	def identity(self):
 		context = self._get_context()
 
+		#access_token = self._get_required_param('access_token')
+		#access_token = tk.request.authorization[1]
+		#if not access_token:
 		access_token = self._get_required_param('access_token')
 
 		try:

@@ -53,6 +53,10 @@ class Oauth2ProviderPlugin(plugins.SingletonPlugin):
 			'/ckan-admin/oauth2provider-clients',
 			controller=client_controller,
 			action='index')
+		route_map.connect('oauth2provider_client_show',
+			'/ckan-admin/oauth2provider-clients/{id}',
+			controller=client_controller,
+			action='show')
 		route_map.connect('oauth2provider_client_new',
 			'/ckan-admin/oauth2provider-clients/new',
 			controller=client_controller,

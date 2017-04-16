@@ -61,3 +61,20 @@ class OAuth2ProviderClientController(tk.BaseController):
 
 		tk.get_action('oauth2provider_client_delete')(context, { 'id': id })
 		return tk.redirect_to('oauth2provider_client_list')
+
+	def show(self, id=None):
+		context = self._get_context()
+
+		try:
+			tk.check_access('oauth2provider_client_show', context)
+		except tk.NotAuthorized:
+			abort(401, _('Unauthorized to  an oauth2 client'))
+
+		client = tk.get_action('oauth2provider_client_show')(context, { 'id': id })
+# 		data = data or {}
+# 		data['client'] = tk.get_action('oauth2provider_client_show')(context)
+		vars = {'data':client, 'action': 'index'}
+
+# 		tk.get_action('oauth2provider_client_show')(context, { 'id': id })
+		return tk.render('ckanext/oauth2provider/client/show.html',
+			extra_vars=vars)
