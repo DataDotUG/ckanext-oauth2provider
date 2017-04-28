@@ -60,6 +60,7 @@ def client_show(context, data_dict):
 		     'name':client.name,
 		     'client_id':client.client_id,
 		     'client_secret':client.client_secret,
+		     'redirect_uri':client.redirect_uri,
 		    }
 
 @tk.side_effect_free
