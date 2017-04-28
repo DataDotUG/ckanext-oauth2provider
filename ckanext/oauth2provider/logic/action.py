@@ -52,6 +52,10 @@ def client_show(context, data_dict):
 	tk.check_access('oauth2provider_client_show', context, data_dict)
 	id = tk.get_or_bust(data_dict, 'id')
 	client = Client.get(id=id)
+
+	if client is None:
+		return None
+
 	return { 'url':client.url,
 		     'name':client.name,
 		     'client_id':client.client_id,
@@ -64,7 +68,7 @@ def client_list(context, data_dict):
 	clients = [(client.id, client.name, client.url)
 			    for client in Client.find().all()]
 
-	log.debug('This message should go to the log file')
+
 	return clients
 
 def client_delete(context, data_dict):

@@ -71,9 +71,11 @@ class OAuth2ProviderClientController(tk.BaseController):
 			abort(401, _('Unauthorized to  an oauth2 client'))
 
 		client = tk.get_action('oauth2provider_client_show')(context, { 'id': id })
-# 		data = data or {}
-# 		data['client'] = tk.get_action('oauth2provider_client_show')(context)
-		vars = {'data':client, 'action': 'index'}
+
+		if client is None:
+			return self.index()
+
+		vars = {'data':client, 'action': 'show'}
 
 # 		tk.get_action('oauth2provider_client_show')(context, { 'id': id })
 		return tk.render('ckanext/oauth2provider/client/show.html',
